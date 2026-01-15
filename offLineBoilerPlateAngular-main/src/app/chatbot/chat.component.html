@@ -1,0 +1,47 @@
+<div class="chat-container">
+    <div class="chat-header">
+        <button *ngIf="isWidget" (click)="back.emit()" class="btn btn-sm btn-link me-2 text-decoration-none">
+            <i class="bi bi-arrow-left"></i>
+        </button>
+        <h2 [class.h5]="isWidget">{{ conversation?.title || 'Chat' }}</h2>
+        <small *ngIf="messages.length > 0" class="text-muted">{{ messages.length }} messages</small>
+    </div>
+
+    <div class="messages-container" #messageContainer>
+        <div *ngIf="loading && !messages.length" class="text-center p-4">
+            <span class="spinner-border text-primary"></span>
+        </div>
+
+        <div *ngIf="!loading && messages.length === 0" class="empty-state">
+            <i class="bi bi-chat-dots fs-1 mb-3"></i>
+            <p>No messages yet. Start a conversation!</p>
+        </div>
+
+        <div *ngFor="let message of messages" class="message"
+            [ngClass]="{'message-user': message.role === 'user', 'message-assistant': message.role === 'assistant'}">
+            <div class="message-bubble">
+                <div class="message-content">{{ message.content }}</div>
+                <div class="message-time">{{ getMessageTime(message.createdAt) }}</div>
+            </div>
+        </div>
+
+        <div *ngIf="sending" class="message message-user">
+            <div class="message-bubble opacity-75">
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Sending...
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-input">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="input-group">
+                <input type="text" formControlName="message" class="form-control" placeholder="Type your message..."
+                    [ngClass]="{ 'is-invalid': f.message.touched && f.message.errors }">
+                <button [disabled]="form.invalid || sending" class="btn btn-primary">
+                    Send
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

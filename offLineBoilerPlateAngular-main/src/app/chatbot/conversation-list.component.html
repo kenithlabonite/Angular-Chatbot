@@ -1,0 +1,59 @@
+<div class="p-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4>AI Chatbot</h4>
+            <button (click)="createConversation()" class="btn btn-primary">
+                New Conversation
+            </button>
+        </div>
+        <div *ngIf="loading" class="text-center p-4">
+            <span class="spinner-border spinner-border-lg"></span>
+        </div>
+        <div *ngIf="!loading && conversations.length === 0" class="text-center p-4">
+            <p class="text-muted">No conversations yet. Create your first one!</p>
+        </div>
+        <div class="conversation-list">
+            <div *ngFor="let conversation of conversations" class="conversation-item"
+                (click)="openConversation(conversation.conversationId)">
+                <div class="conversation-info">
+                    <h5>{{ conversation.title }}</h5>
+                    <small class="text-muted">
+                        {{ conversation.messageCount }} messages ·
+                        Updated {{ conversation.updatedAt | date:'short' }}
+                    </small>
+                </div>
+                <button (click)="deleteConversation(conversation.conversationId, $event)" class="btn btn-sm btn-danger">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .conversation-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .conversation-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .conversation-item:hover {
+        border-color: #007bff;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+    }
+
+    .conversation-info h5 {
+        margin: 0 0 0.25rem 0;
+    }
+</style>
